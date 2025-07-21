@@ -22,6 +22,7 @@ export default function Resources() {
           rel="noopener noreferrer "
           href={paths.docs()}
           className="text-theme-home-text text-sm flex items-center gap-x-2 hover:opacity-70"
+          style={{ display: "none" }}
         >
           {t("main-page.resources.links.docs")}
           <ArrowCircleUpRight weight="fill" size={16} />
@@ -31,6 +32,7 @@ export default function Resources() {
           target="_blank"
           rel="noopener noreferrer"
           className="text-theme-home-text text-sm flex items-center gap-x-2 hover:opacity-70"
+          style={{ display: "none" }}
         >
           {t("main-page.resources.links.star")}
           <ArrowCircleUpRight weight="fill" size={16} />

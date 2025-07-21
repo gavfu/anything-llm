@@ -49,7 +49,7 @@ export default function Footer() {
     return (
       <div className="flex justify-center mb-2">
         <div className="flex space-x-4">
-          <div className="flex w-fit">
+          <div className="flex w-fit" style={{visibility: "hidden"}}>
             <Link
               to={paths.github()}
               target="_blank"
@@ -66,7 +66,7 @@ export default function Footer() {
               />
             </Link>
           </div>
-          <div className="flex w-fit">
+          <div className="flex w-fit" style={{visibility: "hidden"}}>
             <Link
               to={paths.docs()}
               target="_blank"
@@ -83,7 +83,7 @@ export default function Footer() {
               />
             </Link>
           </div>
-          <div className="flex w-fit">
+          <div className="flex w-fit" style={{visibility: "hidden"}}>
             <Link
               to={paths.discord()}
               target="_blank"
