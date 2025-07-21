@@ -35,7 +35,7 @@ export default function Updates() {
   if (isLoading || !news?.length) return null;
 
   return (
-    <div>
+    <div style={{display: "none"}}>
       <h1 className="text-theme-home-text uppercase text-sm font-semibold mb-4">
         {t("main-page.announcements.title")}
       </h1>
@@ -66,7 +66,7 @@ function AnnouncementCard({
   thumbnail_url = null,
   title = "",
   subtitle = "",
-  author = "AnythingLLM",
+  author = "PlexusAI",
   date = null,
   goto = "#",
 }) {
