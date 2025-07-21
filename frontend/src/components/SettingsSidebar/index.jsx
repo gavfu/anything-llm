@@ -205,6 +205,7 @@ function SupportEmail() {
     <Link
       to={supportEmail}
       className="text-theme-text-secondary hover:text-white hover:light:text-theme-text-primary text-xs leading-[18px] mx-3 mt-1"
+      style={{display: "none"}}
     >
       {t("settings.contact")}
     </Link>
