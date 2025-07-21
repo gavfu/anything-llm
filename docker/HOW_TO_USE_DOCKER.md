@@ -147,15 +147,89 @@ container rebuilds or pulls from Docker Hub.
 
 - The UID and GID are set to 1000 by default. This is the default user in the Docker container and on most host operating systems. If there is a mismatch between your host user UID and GID and what is set in the `.env` file, you may experience permission issues.
 
-## Build locally from source _not recommended for casual use_
+## Build locally from source _PlexusAI customized version_
 
-- `git clone` this repo and `cd anything-llm` to get to the root directory.
+### Prerequisites for cross-platform build (MacBook to Linux amd64)
+
+- Ensure Docker Desktop is installed and running
+- Enable experimental features in Docker Desktop settings
+- Set up buildx for multi-platform builds:
+
+```bash
+# Create and use a new builder instance
+docker buildx create --name mybuilder --use
+docker buildx inspect --bootstrap
+```
+
+### Build steps
+
+- `git clone` this repo and `cd plexusai` to get to the root directory.
 - `touch server/storage/anythingllm.db` to create empty SQLite DB file.
 - `cd docker/`
 - `cp .env.example .env` **you must do this before building**
-- `docker-compose up -d --build` to build the image - this will take a few moments.
+- **Return to project root directory**: `cd ..`
 
-Your docker host will show the image as online once the build process is completed. This will build the app to `http://localhost:3001`.
+#### Option 1: Build for local testing (same architecture)
+```bash
+# From project root directory
+docker-compose -f docker/docker-compose.yml up -d --build
+```
+
+#### Option 2: Build and push to Docker Hub for Linux amd64 (recommended for production)
+```bash
+# From project root directory - Build for Linux amd64 platform and push to Docker Hub
+docker buildx build -f docker/Dockerfile --platform linux/amd64 -t gavfu/plexusai:latest --push .
+
+# Or build for multiple platforms
+docker buildx build -f docker/Dockerfile --platform linux/amd64,linux/arm64 -t gavfu/plexusai:latest --push .
+```
+
+#### Limiting concurrent uploads during push
+
+If you need to limit concurrent uploads (for slower networks), configure Docker daemon:
+
+**macOS/Windows (Docker Desktop)**:
+1. Open Docker Desktop Settings
+2. Go to Docker Engine
+3. Add to the configuration:
+```json
+{
+  "max-concurrent-uploads": 1,
+  "max-concurrent-downloads": 1
+}
+```
+4. Apply & Restart
+
+**Linux**:
+```bash
+# Edit /etc/docker/daemon.json
+sudo tee /etc/docker/daemon.json << EOF
+{
+  "max-concurrent-uploads": 1,
+  "max-concurrent-downloads": 1
+}
+EOF
+
+# Restart Docker
+sudo systemctl restart docker
+```
+
+After configuration, push will upload layers sequentially:
+```bash
+docker push gavfu/plexusai:latest
+```
+
+#### Option 3: Build locally for Linux amd64 without pushing
+```bash
+# From project root directory - Build for Linux amd64 and load to local Docker
+docker buildx build -f docker/Dockerfile --platform linux/amd64 -t gavfu/plexusai:latest --load .
+```
+
+**Important**: All docker build commands must be run from the project root directory (`/Users/gavfu/github/gavfu/plexusai`), not from the `docker/` subdirectory.
+
+Your docker host will show the image as online once the build process is completed. The local build will be available at `http://localhost:3001`.
+
+**Note**: When building on MacBook for Linux deployment, use the buildx commands above to ensure compatibility with your target Ubuntu amd64 servers.
 
 ## Integrations and one-click setups
 
